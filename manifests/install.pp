@@ -15,13 +15,18 @@ class foreman::install {
   $osreleasemajor = regsubst($::operatingsystemrelease, '^(\d+)\..*$', '\1')
 
   if $foreman::configure_epel_repo {
-    yumrepo { 'EPEL':
-      descr      => "Extra Packages for Enterprise Linux ${osreleasemajor} - \$basearch",
-      mirrorlist => "https://mirrors.fedoraproject.org/metalink?repo=epel-${osreleasemajor}&arch=\$basearch",
-      baseurl    => "http://download.fedoraproject.org/pub/epel/${osreleasemajor}/\$basearch",
-      enabled    => 1,
-      gpgcheck   => 1,
-      gpgkey     => 'https://fedoraproject.org/static/0608B895.txt',
+    case $::osfamily {
+      RedHat: {
+        yumrepo { 'EPEL':
+          descr      => "Extra Packages for Enterprise Linux ${osreleasemajor} - \$basearch",
+          mirrorlist => "https://mirrors.fedoraproject.org/metalink?repo=epel-${osreleasemajor}&arch=\$basearch",
+          baseurl    => "http://download.fedoraproject.org/pub/epel/${osreleasemajor}/\$basearch",
+          enabled    => 1,
+          gpgcheck   => 1,
+          gpgkey     => 'https://fedoraproject.org/static/0608B895.txt',
+        }
+      }
+      default: {}
     }
   }
 
